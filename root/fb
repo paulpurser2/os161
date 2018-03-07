@@ -1,0 +1,20 @@
+if [ $# -eq 0 ]; then
+        echo "No argument supplied."
+elif [ $1 == "fresh" ]; then
+        echo "No functionality yet..."
+elif [ $1 == "cs" ]; then
+        mrest=$( pwd )
+        cd ~/os161
+        cscope -k -R
+        cd $mrest
+elif [ $1 == "a0" ]; then
+        echo "Building ASST0..."
+        cd kern/compile/ASST0
+        pmake depend
+        pmake
+        pmake install
+elif [ $1 == "r0" ]; then
+        cd root
+        sys161 kernel-ASST0
+        cd ..
+fi

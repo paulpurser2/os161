@@ -1,0 +1,49 @@
+if [ $# -eq 0 ]; then
+	echo "No argument supplied."
+        exit 0
+fi
+
+restore=$( pwd )
+arg="$1"
+
+if [ $arg == "fresh" ]; then
+	echo "No functionality yet..."
+        exit 0
+elif [ $arg == "cs" ]; then
+	echo "Starting cscope..."
+	cd ~/os161
+	cscope -k -R
+	cd $restore
+        exit 0
+elif [ ${#arg} != 2 ]; then
+        echo "Invalid command. Options: fresh | cs | a# | r#"
+        echo "Valid #s are from 1 to 3."
+        exit 0
+fi
+
+type="${arg:0:1}"
+num="${arg:1:1}"
+
+if [ $type != "a" ] && [ $type != "r" ]; then
+        echo "Invalid subcommand ($type)."
+        echo "Forms are either a# or r#."
+        exit 0
+elif [ $num != "1" ] && [ $num != "2" ] && [ $num != "3" ]; then
+        echo "Invalid assignment number ($num)."
+        echo "Valid #s are from 1 to 3."
+        exit 0
+fi
+
+target="ASST$num"
+
+if [ $type == "a" ]; then
+	cd kern/compile/$target
+	bmake depend
+	bmake
+	bmake install
+        cd $restore
+elif [ $type == "r" ]; then
+	cd root
+	sys161 kernel-$target
+	cd $restore
+fi
